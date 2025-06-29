@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Treatments - Disha Clinic{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">Our Treatments</h1>
+
+    <!-- General Health Treatments -->
+    <section class="mb-5">
+        <h2 class="mb-4">General Health</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for treatment in treatments %}
+                {% if treatment.category == 'general' %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if treatment.image %}
+                        <img src="{{ treatment.image.url }}" class="card-img-top" alt="{{ treatment.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ treatment.name }}</h5>
+                            <p class="card-text">{{ treatment.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Women's Health Treatments -->
+    <section class="mb-5">
+        <h2 class="mb-4">Women's Health</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for treatment in treatments %}
+                {% if treatment.category == 'women' %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if treatment.image %}
+                        <img src="{{ treatment.image.url }}" class="card-img-top" alt="{{ treatment.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ treatment.name }}</h5>
+                            <p class="card-text">{{ treatment.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Skin Treatments -->
+    <section class="mb-5">
+        <h2 class="mb-4">Skin & Hair Care</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for treatment in treatments %}
+                {% if treatment.category == 'skin' %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if treatment.image %}
+                        <img src="{{ treatment.image.url }}" class="card-img-top" alt="{{ treatment.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ treatment.name }}</h5>
+                            <p class="card-text">{{ treatment.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Musculoskeletal Treatments -->
+    <section class="mb-5">
+        <h2 class="mb-4">Musculoskeletal Health</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for treatment in treatments %}
+                {% if treatment.category == 'musculoskeletal' %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if treatment.image %}
+                        <img src="{{ treatment.image.url }}" class="card-img-top" alt="{{ treatment.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ treatment.name }}</h5>
+                            <p class="card-text">{{ treatment.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Digestive Health Treatments -->
+    <section class="mb-5">
+        <h2 class="mb-4">Digestive Health</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for treatment in treatments %}
+                {% if treatment.category == 'digestive' %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if treatment.image %}
+                        <img src="{{ treatment.image.url }}" class="card-img-top" alt="{{ treatment.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ treatment.name }}</h5>
+                            <p class="card-text">{{ treatment.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %} 

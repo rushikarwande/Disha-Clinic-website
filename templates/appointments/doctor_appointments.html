@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}Doctor Appointments - Disha Homopathy Clinic{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-4">Manage Appointments</h2>
+
+    <!-- Pending Appointments -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-white">
+            <h4 class="mb-0">Pending Approval</h4>
+        </div>
+        <div class="card-body">
+            {% if pending_appointments %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Patient Name</th>
+                                <th>Reason</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in pending_appointments %}
+                            <tr>
+                                <td>{{ appointment.time_slot.date }}</td>
+                                <td>{{ appointment.time_slot.start_time|time:"g:i A" }} - {{ appointment.time_slot.end_time|time:"g:i A" }}</td>
+                                <td>{{ appointment.patient_name|default:appointment.patient.get_full_name }}</td>
+                                <td>{{ appointment.reason|truncatechars:50 }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveModal{{ appointment.id }}">
+                                        Approve
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{ appointment.id }}">
+                                        Reject
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Approve Modal -->
+                            <div class="modal fade" id="approveModal{{ appointment.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form method="post" action="{% url 'appointments:approve' appointment.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="approve">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Approve Appointment</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure you want to approve this appointment?</p>
+                                                <div class="mb-3">
+                                                    <label for="response{{ appointment.id }}" class="form-label">Add a note (optional):</label>
+                                                    <textarea class="form-control" id="response{{ appointment.id }}" name="response" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-success">Approve</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reject Modal -->
+                            <div class="modal fade" id="rejectModal{{ appointment.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form method="post" action="{% url 'appointments:approve' appointment.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="reject">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Reject Appointment</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure you want to reject this appointment?</p>
+                                                <div class="mb-3">
+                                                    <label for="rejectResponse{{ appointment.id }}" class="form-label">Reason for rejection:</label>
+                                                    <textarea class="form-control" id="rejectResponse{{ appointment.id }}" name="response" rows="3" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center mb-0">No pending appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Approved Appointments -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Approved Appointments</h4>
+        </div>
+        <div class="card-body">
+            {% if approved_appointments %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Patient Name</th>
+                                <th>Reason</th>
+                                <th>Your Response</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in approved_appointments %}
+                            <tr>
+                                <td>{{ appointment.time_slot.date }}</td>
+                                <td>{{ appointment.time_slot.start_time|time:"g:i A" }} - {{ appointment.time_slot.end_time|time:"g:i A" }}</td>
+                                <td>{{ appointment.patient_name|default:appointment.patient.get_full_name }}</td>
+                                <td>{{ appointment.reason|truncatechars:50 }}</td>
+                                <td>{{ appointment.doctor_response|default:"No response"|truncatechars:50 }}</td>
+                                <td>
+                                    <a href="{% url 'appointments:complete' appointment.id %}" class="btn btn-info btn-sm"
+                                       onclick="return confirm('Mark this appointment as completed?')">
+                                        Complete
+                                    </a>
+                                    <a href="{% url 'appointments:cancel' appointment.id %}" class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                        Cancel
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center mb-0">No approved appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Completed Appointments -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Completed Appointments</h4>
+        </div>
+        <div class="card-body">
+            {% if completed_appointments %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Patient Name</th>
+                                <th>Reason</th>
+                                <th>Your Response</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in completed_appointments %}
+                            <tr>
+                                <td>{{ appointment.time_slot.date }}</td>
+                                <td>{{ appointment.time_slot.start_time|time:"g:i A" }} - {{ appointment.time_slot.end_time|time:"g:i A" }}</td>
+                                <td>{{ appointment.patient_name|default:appointment.patient.get_full_name }}</td>
+                                <td>{{ appointment.reason|truncatechars:50 }}</td>
+                                <td>{{ appointment.doctor_response|default:"No response"|truncatechars:50 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center mb-0">No completed appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Cancelled/Rejected Appointments -->
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Cancelled/Rejected Appointments</h4>
+        </div>
+        <div class="card-body">
+            {% if cancelled_appointments %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Patient Name</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Your Response</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in cancelled_appointments %}
+                            <tr>
+                                <td>{{ appointment.time_slot.date }}</td>
+                                <td>{{ appointment.time_slot.start_time|time:"g:i A" }} - {{ appointment.time_slot.end_time|time:"g:i A" }}</td>
+                                <td>{{ appointment.patient_name|default:appointment.patient.get_full_name }}</td>
+                                <td>{{ appointment.reason|truncatechars:50 }}</td>
+                                <td>{{ appointment.get_status_display }}</td>
+                                <td>{{ appointment.doctor_response|default:"No response"|truncatechars:50 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center mb-0">No cancelled or rejected appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

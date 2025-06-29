@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Lecture - Disha Homopathy Clinic{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Create New Lecture</h2>
+                    
+                    <form method="post" id="createLectureForm">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Lecture Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required
+                                    placeholder="Provide a detailed description of the lecture content..."></textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="date" name="date" required
+                                       min="{{ today|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="start_time" class="form-label">Start Time</label>
+                                <input type="time" class="form-control" id="start_time" name="start_time" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="end_time" class="form-label">End Time</label>
+                                <input type="time" class="form-control" id="end_time" name="end_time" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="max_students" class="form-label">Maximum Students</label>
+                            <input type="number" class="form-control" id="max_students" name="max_students" 
+                                   min="1" max="100" value="30" required>
+                            <div class="form-text">Maximum number of students who can register for this lecture.</div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">Important Information</h5>
+                            <ul class="mb-0">
+                                <li>Lecture fee is fixed at ₹500 per student.</li>
+                                <li>You can create multiple lectures for different topics.</li>
+                                <li>Make sure to provide clear and detailed descriptions.</li>
+                                <li>Choose appropriate time slots that don't conflict with your appointments.</li>
+                            </ul>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Create Lecture
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('createLectureForm');
+    const startTime = document.getElementById('start_time');
+    const endTime = document.getElementById('end_time');
+
+    form.addEventListener('submit', function(e) {
+        if (startTime.value >= endTime.value) {
+            e.preventDefault();
+            alert('End time must be after start time');
+        }
+    });
+});
+</script>
+{% endblock %} 

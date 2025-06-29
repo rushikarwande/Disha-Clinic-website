@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Register for Lecture - Disha Homopathy Clinic{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Register for Lecture</h2>
+                    
+                    <div class="lecture-details mb-4">
+                        <h4>{{ lecture.title }}</h4>
+                        <p class="text-muted">
+                            <i class="fas fa-user-md"></i> Dr. {{ lecture.doctor.user.get_full_name }}
+                        </p>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <p class="mb-1">
+                                    <i class="fas fa-calendar"></i> Date
+                                </p>
+                                <strong>{{ lecture.date|date:"F j, Y" }}</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-1">
+                                    <i class="fas fa-clock"></i> Time
+                                </p>
+                                <strong>{{ lecture.start_time|time:"g:i A" }} - {{ lecture.end_time|time:"g:i A" }}</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="mb-1">
+                                    <i class="fas fa-users"></i> Available Seats
+                                </p>
+                                <strong>{{ lecture.max_students }} seats</strong>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">Lecture Fee: ₹500</h5>
+                            <p class="mb-0">
+                                The fee includes:
+                                <ul class="mb-0">
+                                    <li>Access to the live lecture</li>
+                                    <li>Lerning with experience doctor</li>
+                                    
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+
+                    <form method="post" id="lectureForm">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="student_name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="student_name" name="student_name" value="{{ user.get_full_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" value="{{ user.email }}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="institution" class="form-label">Institution/Organization</label>
+                            <input type="text" class="form-control" id="institution" name="institution" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="qualification" class="form-label">Qualification</label>
+                            <input type="text" class="form-control" id="qualification" name="qualification" required>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the terms and conditions
+                            </label>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Proceed to Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

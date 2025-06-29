@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard - Disha Clinic{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">My Dashboard</h1>
+
+    <!-- Appointments Section -->
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">My Appointments</h3>
+        </div>
+        <div class="card-body">
+            {% if appointments %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Doctor</th>
+                                <th>Status</th>
+                                <th>Payment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %}
+                            <tr>
+                                <td>{{ appointment.patient.get_full_name }}</td>
+                                <td>{{ appointment.time_slot.date }}</td>
+                                <td>{{ appointment.time_slot.start_time }} - {{ appointment.time_slot.end_time }}</td>
+                                <td>Dr. {{ appointment.doctor.user.get_full_name }}</td>
+                                <td>
+                                    {% if appointment.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending Approval</span>
+                                    {% elif appointment.status == 'approved' %}
+                                        <span class="badge bg-success">Approved</span>
+                                    {% elif appointment.status == 'rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                    {% elif appointment.status == 'completed' %}
+                                        <span class="badge bg-info">Completed</span>
+                                    {% elif appointment.status == 'cancelled' %}
+                                        <span class="badge bg-secondary">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if appointment.payment_status == 'pending' %}
+                                        <span class="badge bg-warning">Payment Pending</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if appointment.status == 'approved' and appointment.payment_status == 'pending' %}
+                                        <button class="btn btn-primary btn-sm" onclick="showPaymentModal('{{ appointment.id }}')">
+                                            Pay ₹300
+                                        </button>
+                                    {% endif %}
+                                    {% if appointment.status == 'pending' %}
+                                        <button class="btn btn-danger btn-sm" onclick="cancelAppointment('{{ appointment.id }}')">
+                                            Cancel
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center">No appointments found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Lecture Registrations Section -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">My Lecture Registrations</h3>
+        </div>
+        <div class="card-body">
+            {% if lecture_registrations %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Lecture Title</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registration in lecture_registrations %}
+                            <tr>
+                                <td>{{ registration.student.get_full_name }}</td>
+                                <td>{{ registration.lecture.title }}</td>
+                                <td>{{ registration.lecture.date }}</td>
+                                <td>{{ registration.lecture.start_time }} - {{ registration.lecture.end_time }}</td>
+                                <td>
+                                    {% if registration.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% elif registration.status == 'confirmed' %}
+                                        <span class="badge bg-success">Confirmed</span>
+                                    {% elif registration.status == 'cancelled' %}
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if registration.payment_status == 'pending' %}
+                                        <span class="badge bg-warning">Payment Pending</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center">No lecture registrations found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complete Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please complete the payment of ₹300 to confirm your appointment.</p>
+                <form id="paymentForm" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="appointment_id" id="appointment_id">
+                    <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showPaymentModal(appointmentId) {
+    document.getElementById('appointment_id').value = appointmentId;
+    new bootstrap.Modal(document.getElementById('paymentModal')).show();
+}
+
+function cancelAppointment(appointmentId) {
+    if (confirm('Are you sure you want to cancel this appointment?')) {
+        // Add your cancel appointment logic here
+        window.location.href = `/appointments/cancel/${appointmentId}/`;
+    }
+}
+</script>
+{% endblock %} 

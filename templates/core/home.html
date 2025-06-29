@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Disha Homopathy Clinic{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Welcome to Disha Homopathy Clinic</h1>
+        <p class="lead mb-4">Your trusted partner in holistic healthcare</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'appointments:book_appointment' %}" class="btn btn-primary btn-lg">Book an Appointment</a>
+        {% else %}
+            <a href="{% url 'login' %}?next={% url 'appointments:book_appointment' %}" class="btn btn-primary btn-lg">Login to Book Appointment</a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Services</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-md fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Online Consultations</h5>
+                        <p class="card-text">Get expert medical advice from the comfort of your home through video consultations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Practical Lectures</h5>
+                        <p class="card-text">Join our weekly practical lectures for medical students and healthcare professionals.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-heartbeat fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Holistic Treatment</h5>
+                        <p class="card-text">Experience personalized homoeopathic treatment for various health conditions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Doctors Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Expert Doctors</h2>
+        <div class="row justify-content-center">
+            {% for doctor in doctors %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 doctor-card">
+                    <div class="card-img-wrapper">
+                        {% if doctor.profile_picture %}
+                        <img src="{{ doctor.profile_picture.url }}" class="card-img-top" alt="{{ doctor.user.get_full_name }}">
+                        {% else %}
+                        <img src="{% static 'images/default-doctor.jpg' %}" class="card-img-top" alt="{{ doctor.user.get_full_name }}">
+                        {% endif %}
+                        <div class="experience-badge">
+                            <span>{{ doctor.experience }}+ Years</span>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title mb-1">Dr. {{ doctor.user.get_full_name }}</h4>
+                        <p class="text-primary mb-3">{{ doctor.specialization }}</p>
+                        <p class="card-text">{{ doctor.bio|truncatewords:30 }}</p>
+                        <div class="doctor-details mt-3">
+                            <div class="text-center">
+                                <p class="mb-1"><i class="fas fa-graduation-cap"></i></p>
+                                <small class="text-muted">Qualification</small>
+                                <p class="mb-0">{{ doctor.qualification|default:"B.H.M.S, C.G.O, M.Sc(Psychology)" }}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'appointments:book_appointment' %}" class="btn btn-primary">
+                                    <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}?next={% url 'appointments:book_appointment' %}" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Book
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Patient Testimonials</h2>
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">{{ testimonial.patient_name }}</h5>
+                            <div class="text-warning">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= testimonial.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <p class="card-text">{{ testimonial.content }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Experience Better Health?</h2>
+        <p class="lead mb-4">Book your appointment today and take the first step towards holistic wellness.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'appointments:book_appointment' %}" class="btn btn-light btn-lg">Book Now</a>
+        {% else %}
+            <a href="{% url 'login' %}?next={% url 'appointments:book_appointment' %}" class="btn btn-light btn-lg">Login to Book Now</a>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.doctor-card {
+    transition: transform 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.experience-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(13, 110, 253, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.doctor-details {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.doctor-details i {
+    color: #0d6efd;
+    font-size: 1.2rem;
+}
+</style>
+{% endblock %} 
