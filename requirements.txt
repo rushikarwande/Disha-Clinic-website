@@ -1,0 +1,27 @@
+# Django and Core Dependencies
+Django==5.0.7
+django-crispy-forms==2.1
+crispy-bootstrap5==2023.10
+
+# Database
+mysqlclient==2.2.0
+
+# Payment Gateway
+razorpay==1.4.1
+
+# Development and Production Dependencies
+Pillow==10.1.0  # For image handling
+python-decouple==3.8  # For environment variables
+gunicorn==21.2.0  # For production deployment
+whitenoise==6.6.0  # For static files in production
+
+# Security and Utilities
+cryptography==41.0.7  # For secure operations
+requests==2.31.0  # For HTTP requests
+
+# Development Tools (optional but recommended)
+django-debug-toolbar==4.2.0  # For debugging
+django-extensions==3.2.3  # Additional Django utilities
+
+# Environment and Configuration
+python-dotenv==1.0.0  # For .env file support 
