@@ -2,13 +2,15 @@ services:
   - type: web
     name: django-app
     env: python
+    pythonVersion: 3.11.9
     buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
     startCommand: "gunicorn disha_clinic.wsgi:application"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: SECRET_KEY
         sync: false
       - key: DEBUG
         sync: false
       - key: ALLOWED_HOSTS
         sync: false
-pythonVersion: 3.11.9 
