@@ -11,4 +11,4 @@ services:
         sync: false
       - key: ALLOWED_HOSTS
         sync: false
-pythonVersion: 3.11 
+pythonVersion: 3.11.9 
