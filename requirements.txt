@@ -10,7 +10,7 @@ mysqlclient==2.2.0
 razorpay==1.4.1
 
 # Development and Production Dependencies
-Pillow==10.1.0  # For image handling
+Pillow==9.5.0  # For image handling
 python-decouple==3.8  # For environment variables
 gunicorn==21.2.0  # For production deployment
 whitenoise==6.6.0  # For static files in production
