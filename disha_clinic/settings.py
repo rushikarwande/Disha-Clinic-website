@@ -21,12 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ZSXT6Mm1oSYwgBjLFr6zAkrWiOfwJtRDMzCRi0x2hdtau1G199ZwffbGmR_sqNR_p8o')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'your-app-name.onrender.com').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+# Debug database configuration
+print(f"Database Host: {os.environ.get('MYSQL_HOST', 'NOT_SET')}")
+print(f"Database Name: {os.environ.get('MYSQL_DATABASE', 'NOT_SET')}")
+print(f"Database User: {os.environ.get('MYSQL_USER', 'NOT_SET')}")
+print(f"Database Password: {'SET' if os.environ.get('MYSQL_PASSWORD') else 'NOT_SET'}")
 
 
 # Application definition
@@ -82,10 +88,10 @@ WSGI_APPLICATION = 'disha_clinic.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_DATABASE', 'bmigejehlfwgiz3zhri9'),
-        'USER': os.environ.get('MYSQL_USER', 'ui9v2gcvkx35y9wy'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'lDScsEmExlDvU1RJgw2C'),
-        'HOST': os.environ.get('MYSQL_HOST', 'bmigejehlfwgiz3zhri9-mysql.services.clever-cloud.com'),
+        'NAME': os.environ.get('MYSQL_DATABASE', 'clinic_database'),
+        'USER': os.environ.get('MYSQL_USER', 'root'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', ''),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
         'OPTIONS': {
             'ssl': {
