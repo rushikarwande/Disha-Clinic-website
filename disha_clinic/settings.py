@@ -93,11 +93,6 @@ DATABASES = {
         'PASSWORD': os.environ.get('MYSQL_PASSWORD', ''),
         'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
-        'OPTIONS': {
-            'ssl': {
-                'ssl_mode': 'DISABLED',
-            },
-        },
     }
 }
 
