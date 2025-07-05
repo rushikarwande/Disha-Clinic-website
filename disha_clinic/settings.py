@@ -95,7 +95,7 @@ DATABASES = {
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
         'OPTIONS': {
             'ssl': {
-                'ca': '/etc/ssl/certs/ca-certificates.crt',
+                'ssl_mode': 'DISABLED',
             },
         },
     }
