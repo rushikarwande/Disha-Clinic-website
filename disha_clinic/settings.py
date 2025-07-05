@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-here'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ZSXT6Mm1oSYwgBjLFr6zAkrWiOfwJtRDMzCRi0x2hdtau1G199ZwffbGmR_sqNR_p8o')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'your-app-name.onrender.com').split(',')
 
 
 # Application definition
@@ -82,11 +82,16 @@ WSGI_APPLICATION = 'disha_clinic.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'clinic_database',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.environ.get('MYSQL_DATABASE', 'bmigejehlfwgiz3zhri9'),
+        'USER': os.environ.get('MYSQL_USER', 'ui9v2gcvkx35y9wy'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'lDScsEmExlDvU1RJgw2C'),
+        'HOST': os.environ.get('MYSQL_HOST', 'bmigejehlfwgiz3zhri9-mysql.services.clever-cloud.com'),
+        'PORT': os.environ.get('MYSQL_PORT', '3306'),
+        'OPTIONS': {
+            'ssl': {
+                'ca': '/etc/ssl/certs/ca-certificates.crt',
+            },
+        },
     }
 }
 
